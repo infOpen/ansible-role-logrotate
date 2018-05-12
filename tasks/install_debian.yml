@@ -1,0 +1,12 @@
+---
+
+# Debian OS family installation tasks
+
+- name: 'INSTALL | APT | Install packages'
+  apt:
+    name: "{{ item.name }}"
+    update_cache: True
+    cache_valid_time: "{{ logrotate_repository_cache_valid_time }}"
+    install_recommends: "{{ logrotate_repository_install_recommends }}"
+    state: "{{ item.state | default('present') }}"
+  with_items: "{{ logrotate_packages }}"

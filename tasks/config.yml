@@ -1,0 +1,25 @@
+---
+
+# Logrotate configuration tasks
+
+- name: 'CONFIG | Ensure logrotate.d dir exists'
+  file:
+    path: "{{ logrotate_conf_d_dir.path }}"
+    owner: "{{ logrotate_conf_d_dir.owner }}"
+    group: "{{ logrotate_conf_d_dir.group }}"
+    mode: "{{ logrotate_conf_d_dir.mode }}"
+    state: 'directory'
+
+
+- name: 'CONFIG | Manage main configuration file'
+  template:
+    src: "{{ role_path }}/templates/logrotate.conf.j2"
+    dest: "{{ logrotate_conf_main_file.path }}"
+    owner: "{{ logrotate_conf_main_file.owner }}"
+    group: "{{ logrotate_conf_main_file.group }}"
+    mode: "{{ logrotate_conf_main_file.mode }}"
+  register: '_logrotate_main_config'
+
+
+- name: 'CONFIG | Include items management'
+  include: "{{ role_path }}/tasks/config_items.yml"

@@ -44,6 +44,68 @@ $ tox
 ### Default role variables
 
 ``` yaml
+# Defaults vars file for logrotate role
+logrotate_packages: "{{ _logrotate_packages }}"
+logrotate_repository_cache_valid_time: 3600
+logrotate_repository_install_recommends: False
+
+# Configuration paths
+logrotate_conf_d_dir:
+  path: '/etc/logrotate.d'
+  owner: 'root'
+  group: 'root'
+  mode: '0755'
+logrotate_conf_main_file:
+  path: '/etc/logrotate.conf'
+  owner: 'root'
+  group: 'root'
+  mode: '0644'
+
+# Configuration content
+logrotate_main_config: |
+  weekly
+  su root syslog
+  rotate 4
+  create
+  include {{ logrotate_conf_d_dir.path }}
+  /var/log/wtmp {
+      missingok
+      monthly
+      create 0664 root utmp
+      rotate 1
+  }
+  /var/log/btmp {
+      missingok
+      monthly
+      create 0660 root utmp
+      rotate 1
+  }
+logrotate_items: []
+```
+
+## Define logrotate items
+
+You can define easily new logrotate items, the will be stored in *logrotate_conf_d_dir.path*.
+
+``` yaml
+logrotate_items:
+  - name: 'my_app'
+    content: |
+      "/var/log/my_app.log" {
+          daily
+          missingok
+          rotate 54
+          compress
+          delaycompress
+          notifempty
+          create 640 root root
+          sharedscripts
+          postrotate
+              if [ -f /var/run/nginx.pid ]; then
+                  kill -USR1 `cat /var/run/nginx.pid`
+              fi
+          endscript
+      }
 ```
 
 ## Dependencies

@@ -6,4 +6,22 @@
   include: "{{ role_path }}/tasks/manage_variables.yml"
   tags:
     - 'role::logrotate'
+    - 'role::logrotate::config'
     - 'role::logrotate::init'
+    - 'role::logrotate::install'
+
+
+- name: 'INSTALL | Manage OS family installation tasks'
+  become: True
+  include: "{{ role_path }}/tasks/install_{{ ansible_os_family | lower }}.yml"
+  tags:
+    - 'role::logrotate'
+    - 'role::logrotate::install'
+
+
+- name: 'CONFIG | Manage configuration tasks'
+  become: True
+  include: "{{ role_path }}/tasks/config.yml"
+  tags:
+    - 'role::logrotate'
+    - 'role::logrotate::config'

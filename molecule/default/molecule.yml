@@ -30,7 +30,43 @@ provisioner:
     name: 'ansible-lint'
   inventory:
     group_vars:
-      all: {}
+      all:
+        logrotate_main_config: |
+          weekly
+          su root
+          rotate 4
+          create
+          include {{ logrotate_conf_d_dir.path }}
+          /var/log/wtmp {
+              missingok
+              monthly
+              create 0664 root utmp
+              rotate 1
+          }
+          /var/log/btmp {
+              missingok
+              monthly
+              create 0660 root utmp
+              rotate 1
+          }
+        logrotate_items:
+          - name: 'my_app'
+            content: |
+              "/var/log/my_app.log" {
+                  daily
+                  missingok
+                  rotate 54
+                  compress
+                  delaycompress
+                  notifempty
+                  create 640 root root
+                  sharedscripts
+                  postrotate
+                      if [ -f /var/run/nginx.pid ]; then
+                          kill -USR1 `cat /var/run/nginx.pid`
+                      fi
+                  endscript
+              }
     host_vars: {}
 scenario:
   name: 'default'
