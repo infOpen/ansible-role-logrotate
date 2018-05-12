@@ -1,6 +1,10 @@
 # logrotate
 
-[![Build Status](https://travis-ci.org/infOpen/ansible-role-logrotate.svg?branch=master)](https://travis-ci.org/infOpen/ansible-role-logrotate)
+[![Build Status](https://img.shields.io/travis/infOpen/ansible-role-logrotate/master.svg?label=travis_master)](https://travis-ci.org/infOpen/ansible-role-logrotate)
+[![Build Status](https://img.shields.io/travis/infOpen/ansible-role-logrotate/develop.svg?label=travis_develop)](https://travis-ci.org/infOpen/ansible-role-logrotate)
+[![Updates](https://pyup.io/repos/github/infOpen/ansible-role-logrotate/shield.svg)](https://pyup.io/repos/github/infOpen/ansible-role-logrotate/)
+[![Python 3](https://pyup.io/repos/github/infOpen/ansible-role-logrotate/python-3-shield.svg)](https://pyup.io/repos/github/infOpen/ansible-role-logrotate/)
+[![Ansible Role](https://img.shields.io/ansible/role/25591.svg)](https://galaxy.ansible.com/infOpen/logrotate/)
 
 Install logrotate package.
 
