@@ -1,0 +1,18 @@
+---
+
+# Items configuration tasks, can be include in other roles or playbook easily
+
+- name: 'CONFIG | Manage logrotate items configuration'
+  template:
+    src: "{{ role_path }}/templates/item.conf.j2"
+    dest: "{{ logrotate_conf_d_dir.path }}/{{ item.name }}.conf"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default('0644') }}"
+  register: '_logrotate_items_config'
+  with_items: "{{ logrotate_items }}"
+
+
+- name: 'CONFIG | Ensure configuration is valid'
+  command: "logrotate -d {{ logrotate_conf_main_file.path }}"
+  when: "(_logrotate_main_config | changed) or (_logrotate_items_config | changed)"

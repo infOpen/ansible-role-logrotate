@@ -1,0 +1,80 @@
+---
+
+dependency:
+  name: 'galaxy'
+driver:
+  name: 'docker'
+lint:
+  name: 'yamllint'
+platforms:
+  - name: "logrotate-docker-jessie"
+    image: 'minimum2scp/systemd-jessie:latest'
+    command: '/sbin/init'
+    cap_add:
+      - 'SYS_PTRACE'
+    privileged: True
+  - name: "logrotate-docker-xenial"
+    image: 'solita/ubuntu-systemd:16.04'
+    command: '/sbin/init'
+    cap_add:
+      - 'SYS_PTRACE'
+    privileged: True
+  - name: "logrotate-docker-trusty"
+    image: 'ubuntu:trusty'
+    cap_add:
+      - 'SYS_PTRACE'
+    privileged: True
+provisioner:
+  name: 'ansible'
+  lint:
+    name: 'ansible-lint'
+  inventory:
+    group_vars:
+      all:
+        logrotate_main_config: |
+          weekly
+          su root
+          rotate 4
+          create
+          include {{ logrotate_conf_d_dir.path }}
+          /var/log/wtmp {
+              missingok
+              monthly
+              create 0664 root utmp
+              rotate 1
+          }
+          /var/log/btmp {
+              missingok
+              monthly
+              create 0660 root utmp
+              rotate 1
+          }
+        logrotate_items:
+          - name: 'my_app'
+            content: |
+              "/var/log/my_app.log" {
+                  daily
+                  missingok
+                  rotate 54
+                  compress
+                  delaycompress
+                  notifempty
+                  create 640 root root
+                  sharedscripts
+                  postrotate
+                      if [ -f /var/run/nginx.pid ]; then
+                          kill -USR1 `cat /var/run/nginx.pid`
+                      fi
+                  endscript
+              }
+    host_vars: {}
+scenario:
+  name: 'default'
+verifier:
+  name: 'testinfra'
+  additional_files_or_dirs:
+    - '../../tests'
+  lint:
+    name: 'flake8'
+  options:
+    sudo: True
