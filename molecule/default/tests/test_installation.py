@@ -19,9 +19,9 @@ def test_package(host):
 
 
 @pytest.mark.parametrize('item_type,path,owner,group,mode', [
-    ('file', '/etc/logrotate.conf', 'root', 'root', 0644),
-    ('file', '/etc/logrotate.d/my_app.conf', 'root', 'root', 0644),
-    ('directory', '/etc/logrotate.d', 'root', 'root', 0755),
+    ('file', '/etc/logrotate.conf', 'root', 'root', 0o644),
+    ('file', '/etc/logrotate.d/my_app.conf', 'root', 'root', 0o644),
+    ('directory', '/etc/logrotate.d', 'root', 'root', 0o755),
 ])
 def test_paths(host, item_type, path, owner, group, mode):
     """

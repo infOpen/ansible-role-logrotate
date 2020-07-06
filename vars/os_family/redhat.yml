@@ -1,0 +1,6 @@
+---
+
+# Redhat family specific OS vars
+
+_logrotate_packages:
+  - name: 'logrotate'
