@@ -3,6 +3,7 @@
 # Debian OS family installation tasks
 
 - name: 'INSTALL | APT | Install packages'
+  become: True
   apt:
     name: "{{ item.name }}"
     update_cache: True

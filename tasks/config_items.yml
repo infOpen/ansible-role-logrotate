@@ -3,6 +3,7 @@
 # Items configuration tasks, can be include in other roles or playbook easily
 
 - name: 'CONFIG | Manage logrotate items configuration'
+  become: True
   template:
     src: "{{ role_path }}/templates/item.conf.j2"
     dest: "{{ logrotate_conf_d_dir.path }}/{{ item.name }}.conf"
@@ -14,5 +15,6 @@
 
 
 - name: 'CONFIG | Ensure configuration is valid'
+  become: True
   command: "logrotate -d {{ logrotate_conf_main_file.path }}"
-  when: "(_logrotate_main_config | changed) or (_logrotate_items_config | changed)"
+  when: "(_logrotate_main_config is changed) or (_logrotate_items_config is changed)"

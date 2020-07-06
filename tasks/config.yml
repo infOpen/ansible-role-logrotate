@@ -3,6 +3,7 @@
 # Logrotate configuration tasks
 
 - name: 'CONFIG | Ensure logrotate.d dir exists'
+  become: True
   file:
     path: "{{ logrotate_conf_d_dir.path }}"
     owner: "{{ logrotate_conf_d_dir.owner }}"
@@ -12,6 +13,7 @@
 
 
 - name: 'CONFIG | Manage main configuration file'
+  become: True
   template:
     src: "{{ role_path }}/templates/logrotate.conf.j2"
     dest: "{{ logrotate_conf_main_file.path }}"
@@ -22,4 +24,4 @@
 
 
 - name: 'CONFIG | Include items management'
-  include: "{{ role_path }}/tasks/config_items.yml"
+  include_tasks: "{{ role_path }}/tasks/config_items.yml"
